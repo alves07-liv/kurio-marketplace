@@ -18,10 +18,11 @@ export const endpoints={
  orders:()=>api.get<Order[]>('/orders').then(r=>r.data),
  order:(id:string)=>api.get<Order>(`/orders/${id}`).then(r=>r.data),
  orderByKey:(key:string)=>api.get<Order>(`/orders/by-key/${key}`).then(r=>r.data),
- placeOrder:(walletId:string,quoteVersion:string,key:string)=>api.post<Order>('/orders',{walletId,quoteVersion},{headers:{'Idempotency-Key':key}}).then(r=>r.data),
+ placeOrder:(walletId:string,quoteVersion:string,key:string,provider:string)=>api.post<Order>('/orders',{walletId,quoteVersion,provider},{headers:{'Idempotency-Key':key}}).then(r=>r.data),
  profile:()=>api.get<User>('/profile').then(r=>r.data),
  saveProfile:(user:Partial<User>&{currentPassword?:string;newPassword?:string})=>api.put<User>('/profile',user).then(r=>r.data),
  wallets:()=>api.get<Wallet[]>('/wallets').then(r=>r.data),
  saveWallet:(wallet:Omit<Wallet,'id'>)=>api.post<Wallet>('/wallets',wallet).then(r=>r.data)
- ,setPrimaryWallet:(id:string)=>api.put<Wallet>(`/wallets/${id}`,{primary:true}).then(r=>r.data)
+ ,setPrimaryWallet:(id:string)=>api.put<Wallet>(`/wallets/${id}`,{primary:true}).then(r=>r.data),
+ updateWallet:(id:string,wallet:Omit<Wallet,'id'>)=>api.put<Wallet>(`/wallets/${id}`,wallet).then(r=>r.data)
 }

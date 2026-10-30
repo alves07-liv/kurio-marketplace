@@ -16,6 +16,7 @@ export function Detail() {
   const { data: related } = useQuery({ queryKey: ['nfts', 'related', nft?.collection], queryFn: () => endpoints.nfts(new URLSearchParams({ collection: nft!.collection })), enabled: !!nft })
   const [quantity, setQuantity] = useState(1)
   const [edition, setEdition] = useState('1/50')
+  const [imageIndex, setImageIndex] = useState(0)
   const add = useMutation({
     mutationFn: () => endpoints.saveCart({ items: [...(cart?.items || []).filter(item => item.nftId !== id || item.edition !== edition), { nftId: id, edition, quantity: (cart?.items.find(item => item.nftId === id && item.edition === edition)?.quantity || 0) + quantity }] }),
     onSuccess: () => client.invalidateQueries({ queryKey: ['cart'] }),
@@ -36,7 +37,7 @@ export function Detail() {
   return <main className="detail">
     <Link to="/">Início / Mercado</Link>
     <div className="detail-grid">
-      <img src={nft.image} alt={nft.title} width={600} height={600} />
+      <div className="nft-gallery"><img src={imageIndex === 0 ? nft.image : related?.items.filter(item => item.id !== nft.id)[imageIndex - 1]?.image || nft.image} alt={`${nft.title}, imagem ${imageIndex + 1}`} width={600} height={600} /><div className="nft-thumbnails">{[nft,...(related?.items.filter(item => item.id !== nft.id).slice(0,3) || [])].map((item,index)=><button key={item.id} type="button" aria-label={`Ver imagem ${index + 1}`} aria-pressed={imageIndex === index} onClick={() => setImageIndex(index)}><img src={item.image} alt="" /></button>)}</div></div>
       <div>
         <h1>{nft.title}</h1>
         <strong>{nft.price} ETH</strong>
