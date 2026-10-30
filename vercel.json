@@ -1,0 +1,4 @@
+{
+  "installCommand": "npm install --legacy-peer-deps",
+  "rewrites": [{ "source": "/((?!assets/|mockServiceWorker.js).*)", "destination": "/index.html" }]
+}
